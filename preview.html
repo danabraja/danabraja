@@ -76,7 +76,7 @@ textarea { height: 100px; }
   to {opacity:1; transform: translateY(0);}
 }
 
-/* ✨ ENDING ANIMATION */
+/* ✨ ENDING */
 .endingText {
   animation: fadeZoom 1s ease;
 }
@@ -118,20 +118,20 @@ textarea { height: 100px; }
 <!-- 💌 SURAT ASLI -->
 <div id="messagePage" class="container card hidden">
   <p>
-  selamat malam Chloee ❤<br><br>
-  gw balik lagi nih… sekadar nitip kata kecil sebelum lu tidur hehe<br><br>
+  selamat malam Chloee <br><br>
+  gw balik lagi nih…hehe selamat malam yaa cantik<br><br>
 
   hari ini pasti lumayan ya? entah capek, sibuk, atau banyak pikiran...
-  tapi lu hebat udah bisa ngelewatin semuanya 😁<br><br>
+  tapi lu hebat udah bisa ngelewatin semuanya <br><br>
 
-  jangan lupa istirahat ya… ga semua harus selesai hari ini.
-  pelan-pelan aja, yang penting lu tetep jaga diri lu sendiri ❤<br><br>
+  jangan lupa istirahat ya… sama rajin2 berdoa yaa
+  pelan-pelan aja, yang penting lu tetep jaga diri lu sendiri <br><br>
 
   doa gw masih sama: semoga lu selalu sehat, dipermudah semuanya,
-  dan selalu ada hal baik yang nemenin hari-hari lu 🤍<br><br>
+  dan selalu ada hal baik yang nemenin hari-hari lu <br><br>
 
   udah yaa… semoga malam ini tenang.
-  selamat tidur chloeeee ❤
+  selamat tidur cantikkk
   </p>
 
   <button onclick="next('q1')">Lanjut ➡️</button>
@@ -155,7 +155,7 @@ textarea { height: 100px; }
   <button onclick="send()">Kirim 💌</button>
 </div>
 
-<!-- 💖 ENDING FIX -->
+<!-- 💖 ENDING -->
 <div id="end" class="container card hidden">
   <h2 class="endingText">Selamat malam ❤</h2>
   <p class="endingSub">makasih ya udah baca sampai akhir 🤍</p>
@@ -186,22 +186,30 @@ function next(id){
 
 function send(){
   let formData = new FormData();
-  formData.append("Apa kabar", jawab1.value);
-  formData.append("Cerita", jawab2.value);
-  formData.append("Pendapat", jawab3.value);
+
+  formData.append("Apa kabar", document.getElementById('jawab1').value);
+  formData.append("Cerita", document.getElementById('jawab2').value);
+  formData.append("Pendapat", document.getElementById('jawab3').value);
 
   fetch("https://formspree.io/f/mwvypjlb", {
     method: "POST",
-    body: formData
-  }).then(()=>{
-    next('end');
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(res => {
+    if(res.ok){
+      next('end');
 
-    setTimeout(() => {
-      document.body.style.background = "linear-gradient(135deg, #ff80ab, #ffb6d9)";
-    }, 200);
+      setTimeout(() => {
+        document.body.style.background = "linear-gradient(135deg, #ff80ab, #ffb6d9)";
+      }, 200);
 
-  }).catch(()=>{
-    alert("Gagal 😢");
+    } else {
+      alert("Gagal kirim 😢");
+    }
+  })
+  .catch(()=>{
+    alert("Error koneksi 😢");
   });
 }
 
