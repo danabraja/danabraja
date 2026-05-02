@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surat Cinta</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ff4da6, #ff99cc, #ff66b2);
+  color: white;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+.container {
+  padding: 30px;
+  animation: fadeIn 0.8s ease;
+}
+
+.card {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px;
+}
+
+h1, h2 {
+  font-family: 'Pacifico', cursive;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  background: #ff1a75;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+input, textarea {
+  width: 80%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 15px;
+  border: none;
+  outline: none;
+}
+
+textarea { height: 100px; }
+
+.hidden { display: none; }
+
+.heart {
+  position: fixed;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh); opacity: 1; }
+  100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+.endingText {
+  animation: fadeZoom 1s ease;
+}
+
+.endingSub {
+  font-size: 14px;
+  opacity: 0.8;
+  animation: fadeIn 2s ease;
+}
+
+@keyframes fadeZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro" class="container card">
+  <h1>❤ Surat Cinta untuk Chloee ❤</h1>
+  <div>edisi pengantar tidur</div>
+  <button onclick="start()">Buka 💌</button>
+</div>
+
+<div id="passwordPage" class="container card hidden">
+  <h2>Password dulu ya 😆</h2>
+  <input type="password" id="password" placeholder="masukin password...">
+  <br>
+  <button onclick="checkPassword()">Masuk</button>
+</div>
+
+<div id="messagePage" class="container card hidden">
+  <p>
+  selamat malam Chloee <br><br>
+  gw balik lagi nih…hehe selamat malam yaa cantik<br><br>
+
+  hari ini pasti lumayan ya? entah capek, sibuk, atau banyak pikiran...
+  tapi lu hebat udah bisa ngelewatin semuanya <br><br>
+
+  jangan lupa istirahat ya… sama rajin2 berdoa yaa
+  pelan-pelan aja, yang penting lu tetep jaga diri lu sendiri <br><br>
+
+  doa gw masih sama: semoga lu selalu sehat, dipermudah semuanya,
+  dan selalu ada hal baik yang nemenin hari-hari lu <br><br>
+
+  udah yaa… semoga malam ini tenang.
+  selamat tidur cantikkk
+  </p>
+
+  <button onclick="next('q1')">Lanjut ➡️</button>
+</div>
+
+<div id="q1" class="container card hidden">
+  <h3>Apa kabar kamu hari ini?</h3>
+  <textarea id="jawab1"></textarea>
+  <button onclick="next('q2')">Lanjut</button>
+</div>
+
+<div id="q2" class="container card hidden">
+  <h3>Cerita atau keluh kesah hari ini?</h3>
+  <textarea id="jawab2"></textarea>
+  <button onclick="next('q3')">Lanjut</button>
+</div>
+
+<div id="q3" class="container card hidden">
+  <h3>Menurut kamu aku gimana?</h3>
+  <textarea id="jawab3"></textarea>
+  <button onclick="send()">Kirim 💌</button>
+</div>
+
+<div id="end" class="container card hidden">
+  <h2 class="endingText">Selamat malam ❤</h2>
+  <p class="endingSub">makasih ya udah baca sampai akhir 🤍</p>
+</div>
+
+<script>
+function start(){
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('passwordPage').classList.remove('hidden');
+  createHearts();
+}
+
+function checkPassword(){
+  let pass = document.getElementById('password').value;
+  if(pass === "chloecantik"){
+    document.getElementById('passwordPage').classList.add('hidden');
+    document.getElementById('messagePage').classList.remove('hidden');
+  } else {
+    alert("Password salah 😅");
+  }
+}
+
+function next(id){
+  document.querySelectorAll('.container').forEach(e => e.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function send(){
+  let formData = new FormData();
+
+  formData.append("Apa kabar", document.getElementById('jawab1').value);
+  formData.append("Cerita", document.getElementById('jawab2').value);
+  formData.append("Pendapat", document.getElementById('jawab3').value);
+
+  fetch("https://formspree.io/f/mwvypjlb", {
+    method: "POST",
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(res => {
+    if(res.ok){
+      next('end');
+      setTimeout(() => {
+        document.body.style.background = "linear-gradient(135deg, #ff80ab, #ffb6d9)";
+      }, 200);
+    } else {
+      alert("Gagal kirim 😢");
+    }
+  })
+  .catch(()=>{
+    alert("Error koneksi 😢");
+  });
+}
+
+function createHearts(){
+  setInterval(()=>{
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "❤";
+    h.style.left = Math.random()*100 + "vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },500);
+}
+</script>
+
+</body>
+</html>
